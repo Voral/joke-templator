@@ -36,6 +36,12 @@ class DefaultLexerTest extends TestCase
         $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
         $this->assertSame(['value' => 'name'], $tokens[0]->attributes);
     }
+    public function testSelfClosingTagEmpty(): void
+    {
+        $tokens = self::$defaultLexer->tokenize('<j-echo/>');
+        $this->assertCount(1, $tokens);
+        $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
+    }
 
     public function testNestedTags(): void
     {

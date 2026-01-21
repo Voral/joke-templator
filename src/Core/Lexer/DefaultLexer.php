@@ -167,7 +167,7 @@ class DefaultLexer implements LexerInterface
         $tagName = '';
 
         // Читаем имя тега до первого пробела или >
-        while ($i < $templateLength && !in_array($template[$i], [" ", "\t", "\n", "\r", ">"], true)) {
+        while ($i < $templateLength && !in_array($template[$i], [" ", "\t", "\n", "\r", ">", "/"], true)) {
             $tagName .= $template[$i];
             $i++;
         }
