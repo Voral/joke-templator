@@ -149,7 +149,8 @@ class DefaultLexer implements LexerInterface
         $i++;
 
         $pos = $i;
-        return new CloseTagToken(trim($tagName), $raw);
+        $tagName = trim($tagName);
+        return new CloseTagToken($tagName, self::TAG_PREFIX . $tagName, $raw);
     }
 
     /**
@@ -179,7 +180,7 @@ class DefaultLexer implements LexerInterface
 
         $this->skipWhitespaces($template, $templateLength, $i);
 
-        /** @var array<string, string> $attributes */
+        /** @var array<string, string|bool> $attributes */
         $attributes = [];
         while ($i < $templateLength && $template[$i] !== '>' && $template[$i] !== '/') {
             if (!$this->parseAttributes($template, $templateLength, $i, $attributes)) {
@@ -201,8 +202,8 @@ class DefaultLexer implements LexerInterface
 
         $pos = $i;
         return $selfClosing
-            ? new SelfClosingTagToken($tagName, $attributes, $raw)
-            : new OpenTagToken($tagName, $attributes, $raw);
+            ? new SelfClosingTagToken($tagName, self::TAG_PREFIX . $tagName, $attributes, $raw)
+            : new OpenTagToken($tagName, self::TAG_PREFIX . $tagName, $attributes, $raw);
     }
 
     /**

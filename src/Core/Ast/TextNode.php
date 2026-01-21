@@ -10,7 +10,7 @@ use Vasoft\Joke\Templator\Contracts\Core\Ast\NodeInterface;
 class TextNode implements NodeInterface
 {
     /**
-     * @param string $text Текст
+     * @param string $content Текст
      */
-    public function __construct(public string $text) { }
+    public function __construct(public string $content) { }
 }
