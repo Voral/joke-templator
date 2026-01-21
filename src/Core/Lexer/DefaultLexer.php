@@ -70,7 +70,6 @@ class DefaultLexer implements LexerInterface
             }
             return $this->tokenizeTag($template, $templateLength, $pos, $tokens);
         }
-        ++$pos;
         return false;
     }
 

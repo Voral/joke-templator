@@ -26,6 +26,7 @@ class DefaultLexerTest extends TestCase
         $tokens = self::$defaultLexer->tokenize('Hello world');
         $this->assertCount(1, $tokens);
         $this->assertInstanceOf(TextToken::class, $tokens[0]);
+        $this->assertSame('Hello world', $tokens[0]->raw);
     }
 
     public function testSelfClosingTag(): void
