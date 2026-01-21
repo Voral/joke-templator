@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f7c33a4b6f719ec46334ff98fd5a6b99",
+    "content-hash": "2f9759c5ade6d8bb3e050cef36c97e93",
     "packages": [
         {
             "name": "voral/joke",
