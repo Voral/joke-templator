@@ -2,6 +2,8 @@
 
 namespace Vasoft\Joke\Templator\Contracts\Core\Ast;
 
+use Vasoft\Joke\Templator\Exceptions\RenderingException;
+
 interface RendererInterface
 {
     /**
@@ -10,7 +12,7 @@ interface RendererInterface
      * @param string $tagName Имя тега (без префикса)
      * @param TagHandlerInterface $handler
      */
-    public function registerTag(string $tagName, TagHandlerInterface $handler): void;
+    public function registerTag(string $tagName, TagHandlerInterface $handler): static;
 
     /**
      * Рендерит AST в строку.
@@ -18,6 +20,7 @@ interface RendererInterface
      * @param array<NodeInterface> $nodes список узлов
      * @param array<string, mixed> $context Переменные шаблона
      * @return string
+     * @throws RenderingException
      */
     public function render(array $nodes, array $context): string;
 }

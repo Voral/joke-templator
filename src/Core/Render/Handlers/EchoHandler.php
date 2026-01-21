@@ -1,0 +1,25 @@
+<?php
+
+namespace Vasoft\Joke\Templator\Core\Render\Handlers;
+
+use Vasoft\Joke\Templator\Contracts\Core\Ast\RendererInterface;
+use Vasoft\Joke\Templator\Contracts\Core\Ast\TagHandlerInterface;
+use Vasoft\Joke\Templator\Core\Ast\TagNode;
+use Vasoft\Joke\Templator\Exceptions\RenderingException;
+
+class EchoHandler extends BaseHandler implements TagHandlerInterface
+{
+    public function __construct()
+    {
+        $this->requiredAttributes = ['value'];
+    }
+
+    protected function process(TagNode $node, array $context, RendererInterface $renderer): string
+    {
+        $value = $this->resolveValue($context, $node->attributes['value'], '');
+        if ($value === null || $value === false || $value === '') {
+            return '';
+        }
+        return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+    }
+}

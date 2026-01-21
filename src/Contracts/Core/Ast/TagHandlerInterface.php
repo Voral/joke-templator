@@ -3,6 +3,7 @@
 namespace Vasoft\Joke\Templator\Contracts\Core\Ast;
 
 use Vasoft\Joke\Templator\Core\Ast\TagNode;
+use Vasoft\Joke\Templator\Exceptions\RenderingException;
 
 interface TagHandlerInterface
 {
@@ -13,6 +14,7 @@ interface TagHandlerInterface
      * @param array<string, mixed> $context Переменные шаблона
      * @param RendererInterface $renderer Для рекурсивного рендеринга дочерних узлов
      * @return string
+     * @throws RenderingException
      */
     public function handle(TagNode $node, array $context, RendererInterface $renderer): string;
 }
