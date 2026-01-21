@@ -9,8 +9,8 @@ interface LexerInterface
 {
     /**
      * Преобразует строку в список токенов
-     * @param string $content исходный текст
+     * @param string $template исходный текст
      * @return array<TokenInterface> список токенов
      */
-    public function tokenize(string $content): array;
+    public function tokenize(string $template): array;
 }

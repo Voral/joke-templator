@@ -18,6 +18,11 @@
       "Vasoft\\Joke\\Templator\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Vasoft\\Joke\\Templator\\Tests\\": "tests/"
+    }
+  },
   "scripts": {
     "dev": "php -S localhost:8000 -t public/",
     "test": "php vendor/bin/phpunit --display-warnings",
