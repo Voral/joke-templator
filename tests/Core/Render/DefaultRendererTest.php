@@ -28,58 +28,85 @@ class DefaultRendererTest extends TestCase
             new TextNode('World!')
         ];
 
-        $result = $this->renderer->render($nodes, []);
-        self::assertSame('Hello World!', $result);
-    }
-
-    public function testRenderTagNodesWithRegisteredHandler(): void
-    {
-        $this->renderer->registerTag('test', $this->handler);
-
-        $nodes = [
-            new TagNode('test', 'j-test', [], [])
-        ];
-
-        $context = ['key' => 'value'];
-        $result = $this->renderer->render($nodes, $context);
-
-        self::assertSame('[HANDLED:test]', $result);
-        self::assertCount(1, $this->handler->calls);
-        self::assertSame($context, $this->handler->calls[0]['context']);
-        self::assertInstanceOf(DefaultRenderer::class, $this->handler->calls[0]['renderer']);
+        $result = $this->renderer->optimizeStaticNodes($nodes, []);
+        self::assertSame($nodes, $result);
     }
 
     public function testRenderMixedNodes(): void
     {
-        $this->renderer->registerTag('echo', $this->handler);
+        $this->renderer->registerTag('test', $this->handler);
 
         $nodes = [
-            new TextNode('Start'),
-            new TagNode('echo', 'j-echo', [], []),
-            new TextNode('End')
+            new TagNode('test', 'j-test'),
+            new TagNode('test', 'j-test', static: true)
         ];
 
-        $result = $this->renderer->render($nodes, []);
-        self::assertSame('Start[HANDLED:echo]End', $result);
+        $context = ['key' => 'value'];
+        $result = $this->renderer->optimizeStaticNodes($nodes, $context);
+
+        self::assertCount(1, $this->handler->calls);
+        self::assertSame($context, $this->handler->calls[0]['context']);
+        self::assertInstanceOf(DefaultRenderer::class, $this->handler->calls[0]['renderer']);
+
+        self::assertInstanceOf(TextNode::class, $result[1]);
+        self::assertSame('[HANDLED:test]', $result[1]->content);
     }
+
+    public function testRenderStaticNodes(): void
+    {
+        $this->renderer->registerTag('test', $this->handler);
+
+        $nodes = [
+            new TagNode('test', 'j-test', static: true),
+            new TagNode('test', 'j-test', static: true)
+        ];
+
+        $context = ['key' => 'value'];
+        $result = $this->renderer->optimizeStaticNodes($nodes, $context);
+
+        self::assertCount(2, $this->handler->calls);
+        self::assertSame($context, $this->handler->calls[0]['context']);
+        self::assertSame($context, $this->handler->calls[1]['context']);
+        self::assertInstanceOf(DefaultRenderer::class, $this->handler->calls[0]['renderer']);
+        self::assertInstanceOf(DefaultRenderer::class, $this->handler->calls[1]['renderer']);
+
+        self::assertInstanceOf(TextNode::class, $result[0]);
+        self::assertSame('[HANDLED:test]', $result[0]->content);
+        self::assertInstanceOf(TextNode::class, $result[1]);
+        self::assertSame('[HANDLED:test]', $result[1]->content);
+    }
+
+//    public function testRenderMixedNodes1(): void
+//    {
+//        $this->renderer->registerTag('echo', $this->handler);
+//
+//        $nodes = [
+//            new TextNode('Start'),
+//            new TagNode('echo', 'j-echo', [], []),
+//            new TextNode('End')
+//        ];
+//
+//        $result = $this->renderer->optimizeStaticNodes($nodes, []);
+//        self::assertSame('Start[HANDLED:echo]End', $result);
+//    }
 
     public function testThrowsExceptionForUnregisteredTag(): void
     {
         self::expectException(RenderingException::class);
         self::expectExceptionMessage("No handler registered for tag 'j-unknown'");
 
-        $nodes = [new TagNode('unknown', 'j-unknown', [], [])];
-        $this->renderer->render($nodes, []);
+        $nodes = [new TagNode('unknown', 'j-unknown', static: true)];
+        $this->renderer->optimizeStaticNodes($nodes, []);
     }
 
-    public function testThrowsExceptionForUnknownNodeType(): void
-    {
-        self::expectException(RenderingException::class);
-        self::expectExceptionMessage('Unknown node type');
-
-        $fakeNode = new class ( ) implements NodeInterface { };
-        $this->renderer->render([$fakeNode], []);
-    }
+//    public function testThrowsExceptionForUnknownNodeType(): void
+//    {
+//        self::expectException(RenderingException::class);
+//        self::expectExceptionMessage('Unknown node type');
+//
+//        $fakeNode = new class ( ) implements NodeInterface { public bool $static = true; };
+//        $this->renderer->optimizeStaticNodes([$fakeNode], []);
+//    }
 
     public function testRegisterTagReturnsSelfForFluentInterface(): void
     {
@@ -89,7 +116,7 @@ class DefaultRendererTest extends TestCase
 
     public function testRenderEmptyNodeList(): void
     {
-        $result = $this->renderer->render([], []);
-        self::assertSame('', $result);
+        $result = $this->renderer->optimizeStaticNodes([], []);
+        self::assertSame([], $result);
     }
 }

@@ -4,6 +4,7 @@ namespace Vasoft\Joke\Templator\Tests\Fixtures;
 
 use Vasoft\Joke\Templator\Contracts\Core\Ast\RendererInterface;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\TagHandlerInterface;
+use Vasoft\Joke\Templator\Core\Ast\TextNode;
 
 class MockRenderer implements RendererInterface
 {
@@ -22,5 +23,12 @@ class MockRenderer implements RendererInterface
         $this->renderedContexts[] = $context;
         // Для тестов each/if — просто возвращаем placeholder
         return '[RENDERED_CHILDREN]';
+    }
+
+    public function optimizeStaticNodes(array $nodes, array $context): array
+    {
+        $this->renderedContexts[] = $context;
+        // Для тестов each/if — просто возвращаем placeholder
+        return [new TextNode('[RENDERED_CHILDREN]')];
     }
 }

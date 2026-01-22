@@ -29,13 +29,18 @@ class DefaultRenderer implements RendererInterface
      * @inheritDoc
      * @throws RenderingException
      */
-    public function render(array $nodes, array $context): string
+    public function optimizeStaticNodes(array $nodes, array $context): array
     {
-        $output = '';
-        foreach ($nodes as $node) {
-            $output .= $this->renderNode($node, $context);
+        foreach ($nodes as $i => $node) {
+            if ($node instanceof TagNode) {
+                if ($node->static) {
+                    $nodes[$i] = new TextNode($this->renderNode($node, $context));
+                    continue;
+                }
+                $node->children = $this->optimizeStaticNodes($node->children, $context);
+            }
         }
-        return $output;
+        return $nodes;
     }
 
 
@@ -45,23 +50,14 @@ class DefaultRenderer implements RendererInterface
      * @return string
      * @throws RenderingException
      */
-    private function renderNode(NodeInterface $node, array $context): string
+    private function renderNode(TagNode $node, array $context): string
     {
-        if ($node instanceof TextNode) {
-            return $node->content;
+        if (!isset($this->handlers[$node->tagName])) {
+            throw new RenderingException(
+                "No handler registered for tag '{$node->fullTagName}'."
+            );
         }
-
-        if ($node instanceof TagNode) {
-            if (!isset($this->handlers[$node->tagName])) {
-                throw new RenderingException(
-                    "No handler registered for tag '{$node->fullTagName}'."
-                );
-            }
-
-            $handler = $this->handlers[$node->tagName];
-            return $handler->handle($node, $context, $this);
-        }
-
-        throw new RenderingException('Unknown node type: ' . get_class($node));
+        $handler = $this->handlers[$node->tagName];
+        return $handler->handle($node, $context, $this);
     }
 }

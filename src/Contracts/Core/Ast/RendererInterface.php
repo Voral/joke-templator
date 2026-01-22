@@ -23,5 +23,5 @@ interface RendererInterface
      * @return string
      * @throws RenderingException
      */
-    public function render(array $nodes, array $context): string;
+    public function optimizeStaticNodes(array $nodes, array $context): array;
 }

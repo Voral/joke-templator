@@ -52,7 +52,8 @@ class TemplateEngine implements TemplateEngineInterface
         try {
             $tokens = $this->lexer->tokenize($template);
             $ast = $this->parser->parse($tokens);
-            return $this->renderer->render($ast, $context);
+            $this->renderer->renderStatic($ast, $context);
+            return '';
         } catch (\Throwable $e) {
             if ($e instanceof TemplatorException) {
                 throw $e;
