@@ -142,16 +142,16 @@ class TemplateEngineTest extends TestCase
             public function parse(array $tokens): array { return []; }
         };
 
-//        $stubRenderer = new class implements RendererInterface {
-//            public function registerTag(string $tagName, TagHandlerInterface $handler): RendererInterface {
-//                return $this;
-//            }
-//            public function render(array $nodes, array $context): string { return ''; }
-//        };
+        $stubRenderer = new class implements RendererInterface {
+            public function registerTag(string $tagName, TagHandlerInterface $handler): static {
+                return $this;
+            }
+            public function render(array $nodes, array $context): string { return ''; }
+        };
 
         $container->registerSingleton(LexerInterface::class, $stubLexer);
         $container->register(ParserInterface::class, $stubParser);
-//        $container->registerSingleton(RendererInterface::class, $stubRenderer);
+        $container->registerSingleton(RendererInterface::class, $stubRenderer);
 
         $engine = new TemplateEngine($container);
 
@@ -166,8 +166,8 @@ class TemplateEngineTest extends TestCase
         $parserProp->setAccessible(true);
         self::assertSame($stubParser, $parserProp->getValue($engine));
 
-//        $rendererProp = $reflection->getProperty('renderer');
-//        $rendererProp->setAccessible(true);
-//        self::assertSame($stubRenderer, $rendererProp->getValue($engine));
+        $rendererProp = $reflection->getProperty('renderer');
+        $rendererProp->setAccessible(true);
+        self::assertSame($stubRenderer, $rendererProp->getValue($engine));
     }
 }
