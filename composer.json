@@ -3,9 +3,11 @@
   "description": "Templator for Joke micro-framework",
   "type": "library",
   "version": "0.0.1",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": "^8.4",
-    "voral/joke": "^1.1"
+    "voral/joke": "dev-next"
   },
   "require-dev": {
     "voral/version-increment": "^3.2",

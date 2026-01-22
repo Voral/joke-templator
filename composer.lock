@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f9759c5ade6d8bb3e050cef36c97e93",
+    "content-hash": "9636ff4d189bf62777168a4f6fb7106a",
     "packages": [
         {
             "name": "voral/joke",
-            "version": "1.1.0",
+            "version": "dev-next",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Voral/joke.git",
-                "reference": "e7e9531563ce4aff4cc5b704f6fbe914d1d6d438"
+                "reference": "1fbde4c3b3710b7fc0943a900b67a7aafb2e9f3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Voral/joke/zipball/e7e9531563ce4aff4cc5b704f6fbe914d1d6d438",
-                "reference": "e7e9531563ce4aff4cc5b704f6fbe914d1d6d438",
+                "url": "https://api.github.com/repos/Voral/joke/zipball/1fbde4c3b3710b7fc0943a900b67a7aafb2e9f3f",
+                "reference": "1fbde4c3b3710b7fc0943a900b67a7aafb2e9f3f",
                 "shasum": ""
             },
             "require": {
@@ -47,9 +47,9 @@
             "description": "A minimal PHP microframework with manual routing and dependency injection container.",
             "support": {
                 "issues": "https://github.com/Voral/joke/issues",
-                "source": "https://github.com/Voral/joke/tree/v1.1.0"
+                "source": "https://github.com/Voral/joke/tree/next"
             },
-            "time": "2026-01-20T14:13:11+00:00"
+            "time": "2026-01-22T13:21:54+00:00"
         }
     ],
     "packages-dev": [
@@ -2007,9 +2007,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": {},
-    "prefer-stable": false,
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "voral/joke": 20
+    },
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.4"
