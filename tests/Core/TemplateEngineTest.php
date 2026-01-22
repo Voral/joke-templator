@@ -10,9 +10,11 @@ use Vasoft\Joke\Core\ServiceContainer;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\ParserInterface;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\RendererInterface;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\TagHandlerInterface;
+use Vasoft\Joke\Templator\Contracts\Core\Compiler\CompilerInterface;
 use Vasoft\Joke\Templator\Contracts\Core\LexerInterface;
 use Vasoft\Joke\Templator\Core\Ast\DefaultParser;
 use Vasoft\Joke\Templator\Core\Ast\TagNode;
+use Vasoft\Joke\Templator\Core\Compiler\DefaultCompiler;
 use Vasoft\Joke\Templator\Core\Lexer\DefaultLexer;
 use Vasoft\Joke\Templator\Core\Render\DefaultRenderer;
 use Vasoft\Joke\Templator\Core\Render\Handlers\EchoHandler;
@@ -20,7 +22,7 @@ use Vasoft\Joke\Templator\Core\Render\Handlers\RawHandler;
 use Vasoft\Joke\Templator\Core\TemplateEngine;
 use Vasoft\Joke\Templator\Exceptions\TemplatorException;
 
-#[Group("skip")]
+
 class TemplateEngineTest extends TestCase
 {
     use PHPMock;
@@ -36,20 +38,23 @@ class TemplateEngineTest extends TestCase
 
     public function testRenderStringWithEcho(): void
     {
-        $template = 'Hello <j-echo value="name"/>!';
+        $template = 'Hello (<j-echo value="name" j-static/>) <j-echo value="name"/>!';
         $context = ['name' => '<b>Alice</b>'];
 
         $result = $this->engine->renderString($template, $context);
-        self::assertSame('Hello &lt;b&gt;Alice&lt;/b&gt;!', $result);
+        self::assertSame("Hello (<b>Alice</b>) <?php echo \$context['name'];?>!", $result);
     }
 
-    public function testRenderStringWithRaw(): void
+    public function testRenderStringWithEscaped(): void
     {
-        $template = 'Hello <j-raw value="content"/>!';
+        $template = 'Hello <j-echo escaped value="content" j-static/> <j-echo escaped value="content"/>!';
         $context = ['content' => '<b>Bold</b>'];
 
         $result = $this->engine->renderString($template, $context);
-        self::assertSame('Hello <b>Bold</b>!', $result);
+        self::assertSame(
+            'Hello &lt;b&gt;Bold&lt;/b&gt; <?php echo htmlspecialchars((string)$context[\'content\'], ENT_QUOTES, \'UTF-8\');?>!',
+            $result
+        );
     }
 
     public function testRenderFile(): void
@@ -59,7 +64,7 @@ class TemplateEngineTest extends TestCase
 
         try {
             $result = $this->engine->renderFile($templateFile, ['name' => 'Bob']);
-            self::assertSame('Name: Bob', $result);
+            self::assertSame('Name: <?php echo $context[\'name\'];?>', $result);
         } finally {
             unlink($templateFile);
         }
@@ -94,7 +99,7 @@ class TemplateEngineTest extends TestCase
 
         self::expectException(TemplatorException::class);
         self::expectExceptionMessage('Error rendering template: Some error');
-        $this->engine->renderString('<j-error/>', []);
+        $this->engine->renderString('<j-error j-static />', []);
     }
 
     #[RunInSeparateProcess]
@@ -130,6 +135,11 @@ class TemplateEngineTest extends TestCase
         $rendererProp->setAccessible(true);
         $renderer = $rendererProp->getValue($engine);
         self::assertInstanceOf(DefaultRenderer::class, $renderer);
+
+        $compilerProp = $reflection->getProperty('compiler');
+        $compilerProp->setAccessible(true);
+        $compiler = $compilerProp->getValue($engine);
+        self::assertInstanceOf(DefaultCompiler::class, $compiler);
     }
 
     public function testUsesContainerImplementationsWhenRegistered(): void
@@ -144,16 +154,41 @@ class TemplateEngineTest extends TestCase
             public function parse(array $tokens): array { return []; }
         };
 
-        $stubRenderer = new class implements RendererInterface {
-            public function registerTag(string $tagName, TagHandlerInterface $handler): static {
+        $stubCompiler = new class implements CompilerInterface {
+
+            public function compile(array $ast): string
+            {
+                return '';
+            }
+
+            public function registerTagCompiler(string $tagName, string $compilerClass): static
+            {
                 return $this;
             }
-            public function render(array $nodes, array $context): string { return ''; }
+
+            public function registerNodeCompiler(string $nodeClass, string $compilerClass): static
+            {
+                return $this;
+            }
+        };
+
+        $stubRenderer = new class implements RendererInterface {
+            public function registerTag(string $tagName, TagHandlerInterface $handler): static
+            {
+                return $this;
+            }
+
+
+            public function optimizeStaticNodes(array $nodes, array $context): array
+            {
+                return [];
+            }
         };
 
         $container->registerSingleton(LexerInterface::class, $stubLexer);
         $container->register(ParserInterface::class, $stubParser);
         $container->registerSingleton(RendererInterface::class, $stubRenderer);
+        $container->registerSingleton(CompilerInterface::class, $stubCompiler);
 
         $engine = new TemplateEngine($container);
 
@@ -171,5 +206,9 @@ class TemplateEngineTest extends TestCase
         $rendererProp = $reflection->getProperty('renderer');
         $rendererProp->setAccessible(true);
         self::assertSame($stubRenderer, $rendererProp->getValue($engine));
+
+        $compilerProp = $reflection->getProperty('compiler');
+        $compilerProp->setAccessible(true);
+        self::assertSame($stubCompiler, $compilerProp->getValue($engine));
     }
 }

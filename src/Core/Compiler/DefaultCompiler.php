@@ -7,6 +7,10 @@ use Vasoft\Joke\Templator\Contracts\Core\Compiler\CompilerInterface;
 use Vasoft\Joke\Templator\Contracts\Core\Compiler\NodeCompilerInterface;
 use Vasoft\Joke\Templator\Contracts\Core\Compiler\TagCompilerInterface;
 use Vasoft\Joke\Templator\Core\Ast\TagNode;
+use Vasoft\Joke\Templator\Core\Ast\TextNode;
+use Vasoft\Joke\Templator\Core\Compiler\Node\TextNodeCompiler;
+use Vasoft\Joke\Templator\Core\Compiler\Tag\EchoCompiler;
+use Vasoft\Joke\Templator\Core\Compiler\Tag\IfCompiler;
 
 class DefaultCompiler implements CompilerInterface
 {
@@ -21,6 +25,12 @@ class DefaultCompiler implements CompilerInterface
 
     /** @var array<string, TagCompilerInterface> $instantiatedTagCompilers */
     private array $instantiatedTagCompilers = [];
+
+    public function __construct()
+    {
+        $this->registerTagCompiler('echo', EchoCompiler::class);
+        $this->registerTagCompiler('if', IfCompiler::class);
+    }
 
     public function registerTagCompiler(string $tagName, string $compilerClass): static
     {
@@ -42,32 +52,24 @@ class DefaultCompiler implements CompilerInterface
 
     public function compile(array $ast): string
     {
-        $code = "<?php\n";
+        $code = '';
         foreach ($ast as $node) {
             $code .= $this->compileNode($node);
         }
-        return $code . "?>";
+        return $code;
     }
 
     public function compileNode(NodeInterface $node): string
     {
-        // Сначала пробуем NodeCompiler'ы по конкретному классу
-        $nodeClass = get_class($node);
-        if (isset($this->nodeCompilers[$nodeClass])) {
-            $compiler = $this->getNodeCompiler($nodeClass);
+        if ($node instanceof TextNode) {
+            return $node->content;
+        }
+        /** @var TagNode $node */
+        if (isset($this->tagCompilers[$node->tagName])) {
+            $compiler = $this->getTagCompiler($node->tagName);
             return $compiler->compile($node, $this);
         }
-
-        // Затем пробуем TagCompiler для TagNode
-        if ($node instanceof TagNode) {
-            if (isset($this->tagCompilers[$node->tagName])) {
-                $compiler = $this->getTagCompiler($node->tagName);
-                return $compiler->compile($node, $this);
-            }
-            throw new \Exception("No compiler registered for tag '{$node->fullTagName}'");
-        }
-
-        throw new \Exception('No compiler found for node: ' . $nodeClass);
+        throw new \Exception("No compiler registered for tag '{$node->fullTagName}'");
     }
 
     private function getNodeCompiler(string $nodeClass): NodeCompilerInterface

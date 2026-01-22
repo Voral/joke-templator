@@ -6,9 +6,11 @@ use Vasoft\Joke\Core\ServiceContainer;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\ParserInterface;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\RendererInterface;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\TagHandlerInterface;
+use Vasoft\Joke\Templator\Contracts\Core\Compiler\CompilerInterface;
 use Vasoft\Joke\Templator\Contracts\Core\LexerInterface;
 use Vasoft\Joke\Templator\Contracts\Core\TemplateEngineInterface;
 use Vasoft\Joke\Templator\Core\Ast\DefaultParser;
+use Vasoft\Joke\Templator\Core\Compiler\DefaultCompiler;
 use Vasoft\Joke\Templator\Core\Lexer\DefaultLexer;
 use Vasoft\Joke\Templator\Core\Render\DefaultRenderer;
 use Vasoft\Joke\Templator\Exceptions\TemplatorException;
@@ -19,6 +21,7 @@ class TemplateEngine implements TemplateEngineInterface
     private ?LexerInterface $lexer;
     private ?ParserInterface $parser;
     private ?RendererInterface $renderer;
+    private ?CompilerInterface $compiler;
 
     public function __construct(ServiceContainer $serviceContainer)
     {
@@ -33,6 +36,10 @@ class TemplateEngine implements TemplateEngineInterface
         $this->renderer = $serviceContainer->get(RendererInterface::class);
         if ($this->renderer === null) {
             $this->renderer = new DefaultRenderer();
+        }
+        $this->compiler = $serviceContainer->get(CompilerInterface::class);
+        if ($this->compiler === null) {
+            $this->compiler = new DefaultCompiler();
         }
     }
 
@@ -52,8 +59,8 @@ class TemplateEngine implements TemplateEngineInterface
         try {
             $tokens = $this->lexer->tokenize($template);
             $ast = $this->parser->parse($tokens);
-            $this->renderer->renderStatic($ast, $context);
-            return '';
+            $optimizedAst = $this->renderer->optimizeStaticNodes($ast, $context);
+            return $this->compiler->compile($optimizedAst);
         } catch (\Throwable $e) {
             if ($e instanceof TemplatorException) {
                 throw $e;
