@@ -15,13 +15,15 @@ class TagNode implements NodeInterface
      * @param array<string,string|bool> $attributes Атрибут узла в виде key=>value
      * @param array $children Дочерние узлы
      * @param bool $selfClosing Признак самозакрывающегося тега
+     * @param bool $static Признак статического узла
      */
     public function __construct(
         public string $tagName,
         public string $fullTagName,
         public array $attributes = [],
         public array $children = [],
-        public bool $selfClosing = false
+        public bool $selfClosing = false,
+        public bool $static = false
     ) {
     }
 }

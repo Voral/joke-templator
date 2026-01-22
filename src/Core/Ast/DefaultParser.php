@@ -80,7 +80,7 @@ class DefaultParser implements ParserInterface
      */
     private function processOpenTagToken(OpenTagToken $token, array &$stack, array &$rootNodes): void
     {
-        $node = new TagNode($token->tagName, $token->fullTagName, $token->attributes, []);
+        $node = new TagNode($token->tagName, $token->fullTagName, $token->attributes, [], static: $token->static);
         if ($stack) {
             $stack[count($stack) - 1]->children[] = $node;
         } else {
@@ -99,7 +99,7 @@ class DefaultParser implements ParserInterface
 
     private function processSelfClosingTagToken(SelfClosingTagToken $token, array &$stack, array &$rootNodes): void
     {
-        $node = new TagNode($token->tagName, $token->fullTagName, $token->attributes, [], true);
+        $node = new TagNode($token->tagName, $token->fullTagName, $token->attributes, [], true, $token->static);
         if ($stack) {
             $stack[count($stack) - 1]->children[] = $node;
         } else {

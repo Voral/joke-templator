@@ -13,6 +13,7 @@ use Vasoft\Joke\Templator\Exceptions\LexerException;
 class DefaultLexer implements LexerInterface
 {
     private const string TAG_PREFIX = 'j-';
+    private const string STATIC_FLAG = 'j-static';
     private const int TAG_PREFIX_LENGTH = 2;
 
     /**
@@ -218,9 +219,15 @@ class DefaultLexer implements LexerInterface
         $i++; // пропустить '>'
 
         $pos = $i;
+        if (isset($attributes[self::STATIC_FLAG])) {
+            $isStatic = true;
+            unset($attributes[self::STATIC_FLAG]);
+        } else {
+            $isStatic = false;
+        }
         return $selfClosing
-            ? new SelfClosingTagToken($tagName, self::TAG_PREFIX . $tagName, $attributes, $raw)
-            : new OpenTagToken($tagName, self::TAG_PREFIX . $tagName, $attributes, $raw);
+            ? new SelfClosingTagToken($tagName, self::TAG_PREFIX . $tagName, $attributes, $raw, $isStatic)
+            : new OpenTagToken($tagName, self::TAG_PREFIX . $tagName, $attributes, $raw, $isStatic);
     }
 
     /**
