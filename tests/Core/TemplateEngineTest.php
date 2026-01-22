@@ -52,7 +52,7 @@ class TemplateEngineTest extends TestCase
 
     public function testRenderFile(): void
     {
-        $templateFile = dirname(__DIR__, 1) . '/Fixtures/test.joke';
+        $templateFile = dirname(__DIR__) . '/Fixtures/test.joke';
         file_put_contents($templateFile, 'Name: <j-echo value="name"/>');
 
         try {
