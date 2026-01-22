@@ -42,8 +42,8 @@ class IfHandlerTest extends TestCase
 
     public function testIfRequiresConditionAttribute(): void
     {
-        $this->expectException(RenderingException::class);
-        $this->expectExceptionMessage("Attribute 'condition' is required for <j-if>");
+        self::expectException(RenderingException::class);
+        self::expectExceptionMessage("Attribute 'condition' is required for <j-if>");
 
         $node = new TagNode('if', 'j-if', [], []);
         $this->handler->handle($node, [], $this->renderer);

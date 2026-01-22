@@ -24,35 +24,35 @@ class DefaultLexerTest extends TestCase
     public function testTextOnly(): void
     {
         $tokens = self::$defaultLexer->tokenize('Hello world');
-        $this->assertCount(1, $tokens);
-        $this->assertInstanceOf(TextToken::class, $tokens[0]);
-        $this->assertSame('Hello world', $tokens[0]->raw);
+        self::assertCount(1, $tokens);
+        self::assertInstanceOf(TextToken::class, $tokens[0]);
+        self::assertSame('Hello world', $tokens[0]->raw);
     }
 
     public function testSelfClosingTag(): void
     {
         $tokens = self::$defaultLexer->tokenize('<j-echo value="name"/>');
-        $this->assertCount(1, $tokens);
-        $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
-        $this->assertSame(['value' => 'name'], $tokens[0]->attributes);
+        self::assertCount(1, $tokens);
+        self::assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
+        self::assertSame(['value' => 'name'], $tokens[0]->attributes);
     }
 
     public function testSelfClosingTagEmpty(): void
     {
         $tokens = self::$defaultLexer->tokenize('<j-echo/>');
-        $this->assertCount(1, $tokens);
-        $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
+        self::assertCount(1, $tokens);
+        self::assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
     }
 
     public function testNestedTags(): void
     {
         $tpl = "<j-if><j-echo value='x'/></j-if>";
         $tokens = self::$defaultLexer->tokenize($tpl);
-        $this->assertCount(3, $tokens);
-        $this->assertInstanceOf(OpenTagToken::class, $tokens[0]);
-        $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[1]);
-        $this->assertInstanceOf(CloseTagToken::class, $tokens[2]);
-        $this->assertSame(['value' => 'x'], $tokens[1]->attributes);
+        self::assertCount(3, $tokens);
+        self::assertInstanceOf(OpenTagToken::class, $tokens[0]);
+        self::assertInstanceOf(SelfClosingTagToken::class, $tokens[1]);
+        self::assertInstanceOf(CloseTagToken::class, $tokens[2]);
+        self::assertSame(['value' => 'x'], $tokens[1]->attributes);
     }
 
     public function testUnclosedAttributeQuote(): void
@@ -86,10 +86,10 @@ class DefaultLexerTest extends TestCase
     public function testBooleanAttribute(): void
     {
         $tokens = self::$defaultLexer->tokenize('<j-echo value="1"/><j-echo value />');
-        $this->assertCount(2, $tokens);
-        $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
-        $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[1]);
-        $this->assertSame(['value' => true], $tokens[1]->attributes);
+        self::assertCount(2, $tokens);
+        self::assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
+        self::assertInstanceOf(SelfClosingTagToken::class, $tokens[1]);
+        self::assertSame(['value' => true], $tokens[1]->attributes);
     }
 
     public function testEmptyTagName(): void
@@ -109,9 +109,9 @@ class DefaultLexerTest extends TestCase
     public function testWithoutAttribute(): void
     {
         $tokens = self::$defaultLexer->tokenize('<j-echo />');
-        $this->assertCount(1, $tokens);
-        $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
-        $this->assertSame([], $tokens[0]->attributes);
+        self::assertCount(1, $tokens);
+        self::assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
+        self::assertSame([], $tokens[0]->attributes);
     }
 
     public function testStartsWithPrefixOffsetBeyondLength(): void
@@ -163,8 +163,8 @@ class DefaultLexerTest extends TestCase
     {
         $lexer = new DefaultLexer();
 
-        $this->expectException(LexerException::class);
-        $this->expectExceptionMessageMatches('/Expected \'>\' at position \d+/');
+        self::expectException(LexerException::class);
+        self::expectExceptionMessageMatches('/Expected \'>\' at position \d+/');
 
         $lexer->tokenize('<j-tag ok="1" @>');
     }

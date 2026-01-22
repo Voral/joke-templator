@@ -43,8 +43,8 @@ class EachHandlerTest extends TestCase
 
     public function testEachRequiresItemsAndAsAttributes(): void
     {
-        $this->expectException(RenderingException::class);
-        $this->expectExceptionMessage("Attribute 'items' is required for <j-each>");
+        self::expectException(RenderingException::class);
+        self::expectExceptionMessage("Attribute 'items' is required for <j-each>");
 
         $node = new TagNode('each', 'j-each', ['as' => 'item'], []);
         $this->handler->handle($node, [], $this->renderer);
@@ -52,8 +52,8 @@ class EachHandlerTest extends TestCase
 
     public function testEachThrowsExceptionIfItemsIsNotArray(): void
     {
-        $this->expectException(RenderingException::class);
-        $this->expectExceptionMessage("Value at path 'data' is not an array");
+        self::expectException(RenderingException::class);
+        self::expectExceptionMessage("Value at path 'data' is not an array");
 
         $node = new TagNode('each', 'j-each', ['items' => 'data', 'as' => 'item'], []);
         $context = ['data' => 'not an array'];

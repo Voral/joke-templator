@@ -65,8 +65,8 @@ class DefaultRendererTest extends TestCase
 
     public function testThrowsExceptionForUnregisteredTag(): void
     {
-        $this->expectException(RenderingException::class);
-        $this->expectExceptionMessage("No handler registered for tag 'j-unknown'");
+        self::expectException(RenderingException::class);
+        self::expectExceptionMessage("No handler registered for tag 'j-unknown'");
 
         $nodes = [new TagNode('unknown', 'j-unknown', [], [])];
         $this->renderer->render($nodes, []);
@@ -74,8 +74,8 @@ class DefaultRendererTest extends TestCase
 
     public function testThrowsExceptionForUnknownNodeType(): void
     {
-        $this->expectException(RenderingException::class);
-        $this->expectExceptionMessage('Unknown node type');
+        self::expectException(RenderingException::class);
+        self::expectExceptionMessage('Unknown node type');
 
         $fakeNode = new class ( ) implements NodeInterface { };
         $this->renderer->render([$fakeNode], []);

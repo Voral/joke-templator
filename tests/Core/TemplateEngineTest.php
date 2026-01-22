@@ -65,14 +65,14 @@ class TemplateEngineTest extends TestCase
 
     public function testThrowsExceptionOnUnknownTag(): void
     {
-        $this->expectException(TemplatorException::class);
+        self::expectException(TemplatorException::class);
         $this->engine->renderString('<j-unknown/>', []);
     }
 
     public function testThrowsExceptionOnMissingFile(): void
     {
-        $this->expectException(TemplatorException::class);
-        $this->expectExceptionMessage('Template file not found: /non/existent/file.joke');
+        self::expectException(TemplatorException::class);
+        self::expectExceptionMessage('Template file not found: /non/existent/file.joke');
         $this->engine->renderFile('/non/existent/file.joke', []);
     }
 
@@ -102,8 +102,8 @@ class TemplateEngineTest extends TestCase
         $fileExistsMock = $this->getFunctionMock('Vasoft\Joke\Templator\Core', 'file_exists');
         $fileExistsMock->expects(self::once())->willReturn(true);
         $fileGetContentMock->expects(self::once())->willReturn(false);
-        $this->expectException(TemplatorException::class);
-        $this->expectExceptionMessage('Unable to read template file: /existent/file.joke');
+        self::expectException(TemplatorException::class);
+        self::expectExceptionMessage('Unable to read template file: /existent/file.joke');
         $this->engine->renderFile('/existent/file.joke', []);
     }
 

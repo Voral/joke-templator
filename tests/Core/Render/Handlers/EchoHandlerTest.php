@@ -48,8 +48,8 @@ class EchoHandlerTest extends TestCase
 
     public function testEchoRequiresValueAttribute(): void
     {
-        $this->expectException(RenderingException::class);
-        $this->expectExceptionMessage("Attribute 'value' is required for <j-echo>");
+        self::expectException(RenderingException::class);
+        self::expectExceptionMessage("Attribute 'value' is required for <j-echo>");
 
         $node = new TagNode('echo', 'j-echo', [], []);
         $this->handler->handle($node, [], $this->renderer);

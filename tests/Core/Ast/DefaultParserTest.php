@@ -96,8 +96,8 @@ class DefaultParserTest extends TestCase
 
     public function testMismatchedClosingTag(): void
     {
-        $this->expectException(ParserException::class);
-        $this->expectExceptionMessage("Mismatched closing tag: expected '</j-if>' but found '</j-for>'");
+        self::expectException(ParserException::class);
+        self::expectExceptionMessage("Mismatched closing tag: expected '</j-if>' but found '</j-for>'");
 
         $tokens = self::$lexer->tokenize('<j-if></j-for>');
         self::$parser->parse($tokens);
@@ -105,8 +105,8 @@ class DefaultParserTest extends TestCase
 
     public function testUnexpectedClosingTag(): void
     {
-        $this->expectException(ParserException::class);
-        $this->expectExceptionMessage("Unexpected closing tag '</j-if>' with no matching open tag");
+        self::expectException(ParserException::class);
+        self::expectExceptionMessage("Unexpected closing tag '</j-if>' with no matching open tag");
 
         $tokens = self::$lexer->tokenize('</j-if>');
         self::$parser->parse($tokens);
@@ -114,8 +114,8 @@ class DefaultParserTest extends TestCase
 
     public function testUnclosedTag(): void
     {
-        $this->expectException(ParserException::class);
-        $this->expectExceptionMessage("Unclosed tag(s): j-if, j-for");
+        self::expectException(ParserException::class);
+        self::expectExceptionMessage("Unclosed tag(s): j-if, j-for");
 
         $tokens = self::$lexer->tokenize('<j-if><j-for>');
         self::$parser->parse($tokens);
