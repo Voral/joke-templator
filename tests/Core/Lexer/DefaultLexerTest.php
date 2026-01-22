@@ -36,6 +36,7 @@ class DefaultLexerTest extends TestCase
         $this->assertInstanceOf(SelfClosingTagToken::class, $tokens[0]);
         $this->assertSame(['value' => 'name'], $tokens[0]->attributes);
     }
+
     public function testSelfClosingTagEmpty(): void
     {
         $tokens = self::$defaultLexer->tokenize('<j-echo/>');
@@ -97,6 +98,7 @@ class DefaultLexerTest extends TestCase
         self::expectExceptionMessage("Empty tag name at position 0");
         self::$defaultLexer->tokenize('<j- />');
     }
+
     public function testUnclosedCloseTag(): void
     {
         self::expectException(LexerException::class);
@@ -166,4 +168,21 @@ class DefaultLexerTest extends TestCase
 
         $lexer->tokenize('<j-tag ok="1" @>');
     }
+
+    /**
+     * Проверяем что не нарушается внутренний HTML и идет одним токеном
+     * @return void
+     * @throws LexerException
+     */
+    public function testInternalHtml(): void
+    {
+        $tokens = self::$defaultLexer->tokenize('<j-each><p>Test</p></j-each>');
+        self::assertCount(3, $tokens);
+        self::assertInstanceOf(OpenTagToken::class, $tokens[0]);
+        self::assertInstanceOf(TextToken::class, $tokens[1]);
+        self::assertInstanceOf(CloseTagToken::class, $tokens[2]);
+
+        self::assertSame('<p>Test</p>', $tokens[1]->raw);
+    }
+
 }

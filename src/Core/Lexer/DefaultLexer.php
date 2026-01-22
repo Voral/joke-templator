@@ -27,7 +27,13 @@ class DefaultLexer implements LexerInterface
         $pos = 0;
         while ($pos < $templateLength) {
             if (!$this->tokenizeTemplateTag($templateLength, $template, $pos, $tokens)) {
-                $this->tokenizePlainText($templateLength, $template, $pos, $tokens);
+                $this->tokenizePlainText(
+                    $templateLength,
+                    $template,
+                    $pos,
+                    $tokens,
+                    $template[$pos - 1] === '<' ? '<' : ''
+                );
             }
         }
 
@@ -39,17 +45,28 @@ class DefaultLexer implements LexerInterface
      * @param int $templateLength размер шаблона
      * @param string $template шаблон
      * @param int $pos текущая позиция
+     * @param string $startWith передается символ < если мы точно уже знаем, что далее не наш тег
      * @param list<TokenInterface> $tokens список токенов
      */
-    private function tokenizePlainText(int $templateLength, string $template, int &$pos, array &$tokens): void
-    {
+    private function tokenizePlainText(
+        int $templateLength,
+        string $template,
+        int &$pos,
+        array &$tokens,
+        string $startWith
+    ): void {
         $start = $pos;
         while ($pos < $templateLength && $template[$pos] !== '<') {
             ++$pos;
         }
-        $text = substr($template, $start, $pos - $start);
+        $text = ($startWith . substr($template, $start, $pos - $start));
         if ($text !== '') {
-            $tokens[] = new TextToken($text);
+            $previousIndex = count($tokens) - 1;
+            if ($previousIndex >= 0 && $tokens[$previousIndex] instanceof TextToken) {
+                $tokens[$previousIndex]->raw .= $text;
+            } else {
+                $tokens[] = new TextToken($text);
+            }
         }
     }
 
