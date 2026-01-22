@@ -20,6 +20,8 @@ class EchoHandler extends BaseHandler implements TagHandlerInterface
         if ($value === null || $value === false || $value === '') {
             return '';
         }
-        return (string)$value;
+        return ($node->attributes['escaped'] ?? false)
+            ? htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8')
+            : (string)$value;
     }
 }

@@ -28,6 +28,15 @@ class EchoHandlerTest extends TestCase
         self::assertSame('Alice', $result);
     }
 
+    public function testEchoEscapesHtml(): void
+    {
+        $node = new TagNode('echo', 'j-echo', ['value' => 'content', 'escaped' => true], []);
+        $context = ['content' => '<script>alert("xss")</script>'];
+
+        $result = $this->handler->handle($node, $context, $this->renderer);
+        self::assertSame('&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;', $result);
+    }
+
     public function testEchoReturnsEmptyForMissingValue(): void
     {
         $node = new TagNode('echo', 'j-echo', ['value' => 'missing'], []);
