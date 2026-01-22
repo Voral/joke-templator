@@ -33,7 +33,6 @@ class TemplateEngineTest extends TestCase
     {
         $this->engine = new TemplateEngine(new ServiceContainer());
         $this->engine->registerTag('echo', new EchoHandler());
-        $this->engine->registerTag('raw', new RawHandler());
     }
 
     public function testRenderStringWithEcho(): void
