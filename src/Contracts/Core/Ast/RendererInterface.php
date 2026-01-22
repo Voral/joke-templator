@@ -11,6 +11,7 @@ interface RendererInterface
      *
      * @param string $tagName Имя тега (без префикса)
      * @param TagHandlerInterface $handler
+     * @return RendererInterface
      */
     public function registerTag(string $tagName, TagHandlerInterface $handler): static;
 

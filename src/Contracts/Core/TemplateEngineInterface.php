@@ -3,6 +3,7 @@
 namespace Vasoft\Joke\Templator\Contracts\Core;
 
 use Vasoft\Joke\Templator\Contracts\Core\Ast\TagHandlerInterface;
+use Vasoft\Joke\Templator\Exceptions\TemplatorException;
 
 /**
  * Шаблонизатор
@@ -20,18 +21,20 @@ interface TemplateEngineInterface
     /**
      * Рендерит шаблон из строки.
      *
-     * @param string $template
-     * @param array<string, mixed> $context
+     * @param string $template текст шаблона
+     * @param array<string, mixed> $context контекст
      * @return string
+     * @throws TemplatorException
      */
     public function renderString(string $template, array $context): string;
 
     /**
      * Рендерит шаблон из файла.
      *
-     * @param string $path
-     * @param array<string, mixed> $context
+     * @param string $path полный путь к файлу
+     * @param array<string, mixed> $context контекст
      * @return string
+     * @throws TemplatorException
      */
     public function renderFile(string $path, array $context): string;
 }
