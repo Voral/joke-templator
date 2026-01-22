@@ -1,9 +1,9 @@
 <?php
 
-namespace Vasoft\Joke\Templator\Contracts\Core\Ast;
+namespace Vasoft\Joke\Templator\Core\Render\Handlers;
 
+use Vasoft\Joke\Templator\Contracts\Core\Ast\RendererInterface;
 use Vasoft\Joke\Templator\Core\Ast\TagNode;
-use Vasoft\Joke\Templator\Core\Render\Handlers\BaseHandler;
 
 /**
  * Вывод не экранированного HTML

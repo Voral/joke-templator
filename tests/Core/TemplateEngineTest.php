@@ -7,7 +7,6 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Vasoft\Joke\Core\ServiceContainer;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\ParserInterface;
-use Vasoft\Joke\Templator\Contracts\Core\Ast\RawHandler;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\RendererInterface;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\TagHandlerInterface;
 use Vasoft\Joke\Templator\Contracts\Core\LexerInterface;
@@ -16,6 +15,7 @@ use Vasoft\Joke\Templator\Core\Ast\TagNode;
 use Vasoft\Joke\Templator\Core\Lexer\DefaultLexer;
 use Vasoft\Joke\Templator\Core\Render\DefaultRenderer;
 use Vasoft\Joke\Templator\Core\Render\Handlers\EchoHandler;
+use Vasoft\Joke\Templator\Core\Render\Handlers\RawHandler;
 use Vasoft\Joke\Templator\Core\TemplateEngine;
 use Vasoft\Joke\Templator\Exceptions\TemplatorException;
 
@@ -142,16 +142,16 @@ class TemplateEngineTest extends TestCase
             public function parse(array $tokens): array { return []; }
         };
 
-        $stubRenderer = new class implements RendererInterface {
-            public function registerTag(string $tagName, TagHandlerInterface $handler): RendererInterface {
-                return $this;
-            }
-            public function render(array $nodes, array $context): string { return ''; }
-        };
+//        $stubRenderer = new class implements RendererInterface {
+//            public function registerTag(string $tagName, TagHandlerInterface $handler): RendererInterface {
+//                return $this;
+//            }
+//            public function render(array $nodes, array $context): string { return ''; }
+//        };
 
         $container->registerSingleton(LexerInterface::class, $stubLexer);
         $container->register(ParserInterface::class, $stubParser);
-        $container->registerSingleton(RendererInterface::class, $stubRenderer);
+//        $container->registerSingleton(RendererInterface::class, $stubRenderer);
 
         $engine = new TemplateEngine($container);
 

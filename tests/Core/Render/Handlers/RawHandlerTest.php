@@ -1,10 +1,10 @@
 <?php
 
-namespace Vasoft\Joke\Templator\Tests\Contracts\Core\Ast;
+namespace Vasoft\Joke\Templator\Tests\Core\Render\Handlers;
 
-use Vasoft\Joke\Templator\Contracts\Core\Ast\RawHandler;
 use PHPUnit\Framework\TestCase;
 use Vasoft\Joke\Templator\Core\Ast\TagNode;
+use Vasoft\Joke\Templator\Core\Render\Handlers\RawHandler;
 use Vasoft\Joke\Templator\Tests\Fixtures\MockRenderer;
 
 class RawHandlerTest extends TestCase
