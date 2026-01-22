@@ -20,6 +20,6 @@ class EchoHandler extends BaseHandler implements TagHandlerInterface
         if ($value === null || $value === false || $value === '') {
             return '';
         }
-        return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+        return (string)$value;
     }
 }

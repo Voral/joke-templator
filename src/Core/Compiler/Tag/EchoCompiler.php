@@ -26,7 +26,7 @@ class EchoCompiler implements TagCompilerInterface
             throw new \Exception("Missing 'value' attribute in <{$node->fullTagName}>");
         }
         $path = $this->generateArrayAccess($node->attributes['value']);
-        return "echo htmlspecialchars({$path}, ENT_QUOTES, 'UTF-8');\n";
+        return "<?php echo {$path};?>";
     }
 
     private function generateArrayAccess(string $path): string
