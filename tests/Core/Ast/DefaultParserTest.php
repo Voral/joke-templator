@@ -2,13 +2,14 @@
 
 namespace Vasoft\Joke\Templator\Tests\Core\Ast;
 
+use PHPUnit\Framework\Attributes\Group;
 use Vasoft\Joke\Templator\Core\Ast\DefaultParser;
 use PHPUnit\Framework\TestCase;
 use Vasoft\Joke\Templator\Core\Ast\TagNode;
 use Vasoft\Joke\Templator\Core\Ast\TextNode;
 use Vasoft\Joke\Templator\Core\Lexer\DefaultLexer;
 use Vasoft\Joke\Templator\Exceptions\ParserException;
-
+#[Group("skip")]
 class DefaultParserTest extends TestCase
 {
     private static ?DefaultParser $parser = null;

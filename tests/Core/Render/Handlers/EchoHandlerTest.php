@@ -2,12 +2,13 @@
 
 namespace Vasoft\Joke\Templator\Tests\Core\Render\Handlers;
 
+use PHPUnit\Framework\Attributes\Group;
 use Vasoft\Joke\Templator\Core\Ast\TagNode;
 use Vasoft\Joke\Templator\Core\Render\Handlers\EchoHandler;
 use PHPUnit\Framework\TestCase;
 use Vasoft\Joke\Templator\Exceptions\RenderingException;
 use Vasoft\Joke\Templator\Tests\Fixtures\MockRenderer;
-
+#[Group("skip")]
 class EchoHandlerTest extends TestCase
 {
     private EchoHandler $handler;

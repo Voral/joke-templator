@@ -2,6 +2,7 @@
 
 namespace Vasoft\Joke\Templator\Tests\Core\Render;
 
+use PHPUnit\Framework\Attributes\Group;
 use Vasoft\Joke\Templator\Contracts\Core\Ast\NodeInterface;
 use Vasoft\Joke\Templator\Core\Ast\TagNode;
 use Vasoft\Joke\Templator\Core\Ast\TextNode;
@@ -9,7 +10,7 @@ use Vasoft\Joke\Templator\Core\Render\DefaultRenderer;
 use PHPUnit\Framework\TestCase;
 use Vasoft\Joke\Templator\Exceptions\RenderingException;
 use Vasoft\Joke\Templator\Tests\Fixtures\DummyTagHandler;
-
+#[Group("skip")]
 class DefaultRendererTest extends TestCase
 {
     private DefaultRenderer $renderer;

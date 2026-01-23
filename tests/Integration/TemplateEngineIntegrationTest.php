@@ -8,10 +8,10 @@ use Vasoft\Joke\Core\ServiceContainer;
 use Vasoft\Joke\Templator\Core\Render\Handlers\EachHandler;
 use Vasoft\Joke\Templator\Core\Render\Handlers\EchoHandler;
 use Vasoft\Joke\Templator\Core\Render\Handlers\IfHandler;
-use Vasoft\Joke\Templator\Core\Render\Handlers\RawHandler;
 use Vasoft\Joke\Templator\Core\TemplateEngine;
 use Vasoft\Joke\Templator\Exceptions\RenderingException;
 use Vasoft\Joke\Templator\Exceptions\TemplatorException;
+
 #[Group("skip")]
 class TemplateEngineIntegrationTest extends TestCase
 {
@@ -25,7 +25,6 @@ class TemplateEngineIntegrationTest extends TestCase
         $this->engine->registerTag('echo', new EchoHandler());
         $this->engine->registerTag('if', new IfHandler());
         $this->engine->registerTag('each', new EachHandler());
-        $this->engine->registerTag('raw', new RawHandler());
     }
 
     public function testBasicEcho(): void
@@ -34,12 +33,12 @@ class TemplateEngineIntegrationTest extends TestCase
         $context = ['name' => 'Alice'];
 
         $result = $this->engine->renderString($template, $context);
-        self::assertSame('Hello Alice!', $result);
+        self::assertSame('Hello <?php echo $context[\'name\'];?>!', $result);
     }
 
     public function testEchoEscapesHtml(): void
     {
-        $template = '<j-echo value="content"/>';
+        $template = '<j-echo value="content" escaped j-static/>';
         $context = ['content' => '<script>alert("xss")</script>'];
 
         $result = $this->engine->renderString($template, $context);
@@ -48,7 +47,7 @@ class TemplateEngineIntegrationTest extends TestCase
 
     public function testRawDoesNotEscape(): void
     {
-        $template = '<j-raw value="html"/>';
+        $template = '<j-echo value="html" j-static/>';
         $context = ['html' => '<b>Bold Text</b>'];
 
         $result = $this->engine->renderString($template, $context);
@@ -66,7 +65,7 @@ class TemplateEngineIntegrationTest extends TestCase
 
     public function testIfConditionFalse(): void
     {
-        $template = '<j-if condition="show">Hidden</j-if>';
+        $template = '<j-if condition="show" j-static>Hidden</j-if>';
         $context = ['show' => false];
 
         $result = $this->engine->renderString($template, $context);

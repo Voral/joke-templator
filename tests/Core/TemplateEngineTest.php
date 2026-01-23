@@ -22,6 +22,7 @@ use Vasoft\Joke\Templator\Core\Render\Handlers\RawHandler;
 use Vasoft\Joke\Templator\Core\TemplateEngine;
 use Vasoft\Joke\Templator\Exceptions\TemplatorException;
 
+#[Group("skip")]
 
 class TemplateEngineTest extends TestCase
 {

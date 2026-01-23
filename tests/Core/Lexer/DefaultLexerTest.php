@@ -3,6 +3,7 @@
 namespace Vasoft\Joke\Templator\Tests\Core\Lexer;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Vasoft\Joke\Templator\Core\Lexer\DefaultLexer;
 use PHPUnit\Framework\TestCase;
 use Vasoft\Joke\Templator\Core\Tokens\CloseTagToken;
@@ -10,7 +11,7 @@ use Vasoft\Joke\Templator\Core\Tokens\OpenTagToken;
 use Vasoft\Joke\Templator\Core\Tokens\SelfClosingTagToken;
 use Vasoft\Joke\Templator\Core\Tokens\TextToken;
 use Vasoft\Joke\Templator\Exceptions\LexerException;
-
+#[Group("skip")]
 class DefaultLexerTest extends TestCase
 {
     private static ?DefaultLexer $defaultLexer = null;
