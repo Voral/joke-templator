@@ -27,7 +27,7 @@
   },
   "scripts": {
     "dev": "php -S localhost:8000 -t public/",
-    "test": "php vendor/bin/phpunit --display-warnings",
+    "test": "php vendor/bin/phpunit --display-warnings --exclude-group=skip",
     "vi:major": "php ./vendor/bin/vs-version-increment major",
     "vi:minor": "php ./vendor/bin/vs-version-increment minor",
     "vi:patch": "php ./vendor/bin/vs-version-increment patch",
@@ -37,7 +37,7 @@
   },
   "scripts-descriptions": {
     "dev": "Start development server on http://localhost:8000",
-    "test": "Run PHPUnit tests",
+    "test": "Run PHPUnit tests (exclude group 'skip')",
     "vi:major": "Increment major version and update CHANGELOG.md",
     "vi:minor": "Increment minor version and update CHANGELOG.md",
     "vi:patch": "Increment patch version and update CHANGELOG.md",
