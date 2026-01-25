@@ -3,10 +3,10 @@
 namespace Vasoft\Joke\Templator\Core\Ast;
 
 use Vasoft\Joke\Templator\Contracts\Core\Ast\ParserInterface;
+use Vasoft\Joke\Templator\Core\Lexer\TextToken;
 use Vasoft\Joke\Templator\Core\Tokens\CloseTagToken;
 use Vasoft\Joke\Templator\Core\Tokens\OpenTagToken;
 use Vasoft\Joke\Templator\Core\Tokens\SelfClosingTagToken;
-use Vasoft\Joke\Templator\Core\Tokens\TextToken;
 use Vasoft\Joke\Templator\Exceptions\ParserException;
 
 /**

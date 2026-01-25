@@ -2,6 +2,11 @@
 
 namespace Vasoft\Joke\Templator\Core\Tokens;
 
+use Vasoft\Joke\Templator\Core\Lexer\Token;
+
+/**
+ * @deprecated
+ */
 final class SelfClosingTagToken extends Token
 {
     /**
@@ -15,7 +20,9 @@ final class SelfClosingTagToken extends Token
         public string $tagName,
         public string $fullTagName,
         public array $attributes,
-        public string $raw,
+        string $raw,
         public bool $static,
-    ) {}
+    ) {
+        parent::__construct($raw);
+    }
 }

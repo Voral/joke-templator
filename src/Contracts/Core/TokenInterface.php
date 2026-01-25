@@ -7,5 +7,7 @@ namespace Vasoft\Joke\Templator\Contracts\Core;
  */
 interface TokenInterface
 {
-
+    public string $raw {
+        get;
+    }
 }

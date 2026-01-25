@@ -1,14 +1,15 @@
 <?php
 
-namespace Vasoft\Joke\Templator\Core\Tokens;
+namespace Vasoft\Joke\Templator\Core\Lexer;
 
 use Vasoft\Joke\Templator\Contracts\Core\TokenInterface;
 
 /**
- * Абстрактный Класс описания токенов
+ * Абстрактный Класс токенов
  *
  * Базовый класс, на случай если понадобиться реализовать общие методы
  */
 abstract class Token implements TokenInterface
 {
+    public function __construct(public readonly string $raw) { }
 }

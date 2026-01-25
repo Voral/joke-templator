@@ -2,6 +2,11 @@
 
 namespace Vasoft\Joke\Templator\Core\Tokens;
 
+use Vasoft\Joke\Templator\Core\Lexer\Token;
+
+/**
+ * @deprecated
+ */
 final class CloseTagToken extends Token
 {
     /**
@@ -12,8 +17,8 @@ final class CloseTagToken extends Token
     public function __construct(
         public string $tagName,
         public string $fullTagName,
-        public string $raw
-    )
-    {
+        string $raw
+    ) {
+        parent::__construct($raw);
     }
 }
